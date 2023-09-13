@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    DUPLICATED_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다.");
+    DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다.");
 
     private HttpStatus status;
     private String message;
