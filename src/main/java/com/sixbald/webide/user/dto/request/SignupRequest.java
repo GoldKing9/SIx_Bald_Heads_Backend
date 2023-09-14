@@ -12,7 +12,7 @@ import lombok.Getter;
 public class SignupRequest {
 
     @NotBlank(message = "필수 입력사항입니다.")
-    @Email(message = "이메일 형식에 맞지 않습니다.")
+    @Email(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "이메일 형식에 맞지 않습니다.")
     private String email;
     @NotBlank(message = "필수 입력사항입니다.")
     @Pattern(regexp = "^[a-zA-Z0-9]{8,12}$", message = "비밀번호는 8~12자의 숫자와 대소문자로만 구성되어야 합니다.")

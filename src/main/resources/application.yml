@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: local
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/webide?serverTimezone=Asia/Seoul
+    username: root
+    password:
+
+  redis:
+    host: localhost
+    port:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  token:
+    secret: "secretKey"
