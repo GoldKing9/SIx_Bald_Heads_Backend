@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Entity
@@ -27,5 +28,8 @@ public class User extends BaseEntity {
         this.email = email;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
+    }
+    public void updateImage(String imageUrl){
+        this.profileImgUrl = imageUrl;
     }
 }
