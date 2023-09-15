@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserSignupDto {
+public class UserSignupRequest {
 
     @Email(message = "유효하지 않은 이메일 형식입니다.",
             regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
@@ -27,7 +27,7 @@ public class UserSignupDto {
     private boolean nicknameValid;
 
     @Builder
-    public UserSignupDto(String email, String password, String nickname, boolean emailValid, boolean nicknameValid) {
+    public UserSignupRequest(String email, String password, String nickname, boolean emailValid, boolean nicknameValid) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
