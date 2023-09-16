@@ -1,5 +1,8 @@
 package com.sixbald.webide.common;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperties;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -30,7 +30,6 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
     }
 
     public static void setResponse(HttpServletResponse response, String status, String message) throws IOException {
-        System.out.println(message);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
