@@ -1,7 +1,6 @@
 package com.sixbald.webide.user;
 
 import com.sixbald.webide.config.auth.LoginUser;
-import com.sixbald.webide.config.auth.LoginUserService;
 import com.sixbald.webide.config.utils.JwtUtils;
 import com.sixbald.webide.domain.User;
 import com.sixbald.webide.exception.ErrorCode;

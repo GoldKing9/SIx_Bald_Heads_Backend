@@ -1,12 +1,10 @@
 package com.sixbald.webide.config;
 
 import com.sixbald.webide.config.auth.LoginUserService;
-//import com.sixbald.webide.config.filter.JwtExceptionFilter;
 import com.sixbald.webide.config.filter.JwtTokenFilter;
 import com.sixbald.webide.config.utils.JwtUtils;
 import com.sixbald.webide.exception.CustomEntryPoint;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
