@@ -38,6 +38,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         }
 
+        response.reset();
+        response.getOutputStream();
         filterChain.doFilter(request, response);
     }
 }

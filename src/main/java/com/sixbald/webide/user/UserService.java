@@ -3,9 +3,11 @@ package com.sixbald.webide.user;
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.config.utils.JwtUtils;
+import com.sixbald.webide.domain.RefreshToken;
 import com.sixbald.webide.domain.User;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
+import com.sixbald.webide.repository.RefreshTokenRepository;
 import com.sixbald.webide.repository.UserRepository;
 import com.sixbald.webide.user.dto.request.*;
 import com.sixbald.webide.user.dto.response.UserDTO;
@@ -20,6 +22,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +47,8 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    
+    private final RefreshTokenRepository refreshTokenRepository;
+
     @Transactional(readOnly = true)
     public UserDTO getUserInfo(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
@@ -89,9 +93,9 @@ public class UserService {
         userRepository.save(user);
 
         return Response.success("프로필 닉네임 수정 성공");
-        }
+    }
         
-         public Response<Void> nicknameCheck(NicknameRequest request) {
+    public Response<Void> nicknameCheck(NicknameRequest request) {
         String nickname = request.getNickname();
         if (userRepository.existsByNickname(nickname)) {
             throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
@@ -189,11 +193,38 @@ public class UserService {
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         String token = jwtUtils.generateJwt(loginUser);
+        String refreshToken = jwtUtils.createRefreshToken();
+
+        refreshTokenRepository.save(RefreshToken.builder()
+                        .id("user")
+                        .loginUser(loginUser)
+                        .refreshToken(refreshToken)
+                .build());
 
         return UserLoginResponse.builder()
                 .userId(loginUser.getUser().getId())
                 .nickname(loginUser.getUser().getNickname())
+                .role(loginUser.getUser().getRole())
                 .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Transactional
+    public UserLoginResponse reissue(String refreshToken){
+        RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() ->
+                new GlobalException(ErrorCode.EXPIRED_REFRESH_TOKEN, "RefreshToken Expired")
+        );
+
+        LoginUser loginUser = token.getLoginUser();
+        String newToken = jwtUtils.generateJwt(loginUser);
+
+        return UserLoginResponse.builder()
+                .userId(loginUser.getUser().getId())
+                .nickname(loginUser.getUser().getNickname())
+                .role(loginUser.getUser().getRole())
+                .accessToken(newToken)
+                .refreshToken(refreshToken)
                 .build();
     }
  }

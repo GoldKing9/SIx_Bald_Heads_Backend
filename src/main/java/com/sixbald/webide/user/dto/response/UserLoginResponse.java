@@ -17,12 +17,14 @@ public class UserLoginResponse {
     private Role role;
     @Schema(description = "accessToken 정보", example = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJkb3JpYW5Acm9rLnJvayIsIm5pY2tuYW1lIjoi7LWc7ZWY66Gd66GdIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTY5NDc4NDk2MSwiZXhwIjoxNjk0Nzg0OTcxfQ.cRFMYkBO8E77FxHbyro_m5nmeJkmpKnHATslvAtPRc0")
     private String accessToken;
+    private String refreshToken;
 
     @Builder
-    public UserLoginResponse(Long userId, String nickname, String role, String accessToken) {
+    public UserLoginResponse(Long userId, String nickname, Role role, String accessToken, String refreshToken) {
         this.userId = userId;
         this.nickname = nickname;
         this.role = Role.USER;
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }
