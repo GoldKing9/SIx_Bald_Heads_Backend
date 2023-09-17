@@ -25,6 +25,7 @@ public class Response<T> {
         return new Response<>("Success", null, data);
     }
 
+
     public static Response<Void> error(String status, String message){
         return new Response<>(status, message, null);
     }

@@ -1,24 +1,33 @@
 package com.sixbald.webide.user;
 
 import com.sixbald.webide.common.Response;
-import com.sixbald.webide.config.RedisUtil;
+import com.sixbald.webide.domain.User;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
 import com.sixbald.webide.repository.UserRepository;
+import com.sixbald.webide.user.dto.request.RequestNickname;
+import com.sixbald.webide.user.dto.response.UserDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import com.sixbald.webide.config.RedisUtil;
 import com.sixbald.webide.user.dto.request.EmailCheckRequest;
 import com.sixbald.webide.user.dto.request.NicknameRequest;
 import com.sixbald.webide.user.dto.request.PasswordRequest;
 import com.sixbald.webide.user.dto.request.SendEmailRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     @Value("${spring.mail.username}")
@@ -27,8 +36,55 @@ public class UserService {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
+    private final S3Service s3Service;
+    
+    @Transactional(readOnly = true)
+    public UserDTO getUserInfo(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
+        );
 
-    public Response<Void> nicknameCheck(NicknameRequest request) {
+        return UserDTO.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .userId(user.getId())
+                .imageUrl(user.getProfileImgUrl())
+                .build();
+
+    }
+
+    @Transactional
+    public void updateUserProfileImage(Long userId, MultipartFile imageUrl) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
+        );
+        if(!user.getProfileImgUrl().isEmpty()){
+            log.info("기존 이미지 경로 : {}", user.getProfileImgUrl());
+            String result = s3Service.deleteFile(user.getProfileImgUrl()); //삭제 로직
+            log.info("기존 프로필 이미지 삭제 :{}", result);
+        }
+
+        String imgPath = s3Service.upload(imageUrl); // 업로드
+        log.info("새로 업로드된 이미지 경로 : {}", imgPath);
+        user.updateImage(imgPath);
+        userRepository.save(user);
+    }
+    @Transactional
+    public Response<Void> updateNickname(Long userId, RequestNickname requestNickname) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
+        );
+        String updateNickname = requestNickname.getNickname();
+        if(userRepository.existsByNickname(updateNickname)){
+            throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
+        }
+        user.updateNickname(updateNickname);
+        userRepository.save(user);
+
+        return Response.success("프로필 닉네임 수정 성공");
+        }
+        
+         public Response<Void> nicknameCheck(NicknameRequest request) {
         String nickname = request.getNickname();
         if (userRepository.existsByNickname(nickname)) {
             throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
@@ -100,5 +156,6 @@ public class UserService {
         }
 
         return code.toString();
-    }
-}
+        }
+ }
+        
