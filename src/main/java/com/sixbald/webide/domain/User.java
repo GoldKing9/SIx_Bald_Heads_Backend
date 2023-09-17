@@ -26,6 +26,6 @@ public class User extends BaseEntity {
         this.password = password;
         this.email = email;
         this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
+        this.profileImgUrl = "https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w480-h960-rw";
     }
 }

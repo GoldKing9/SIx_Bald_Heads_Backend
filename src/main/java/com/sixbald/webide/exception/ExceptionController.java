@@ -2,26 +2,45 @@ package com.sixbald.webide.exception;
 
 import com.sixbald.webide.common.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionController {
 
     @ExceptionHandler(value = GlobalException.class)
-    public Response<Void> handleGlobalExceptionHandler(GlobalException e) {
+    public ResponseEntity<Response<Void>> handleGlobalExceptionHandler(GlobalException e) {
         log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur: {}" , e.toString());
-        return Response.error(e.getErrorCode().getStatus().value(), e.getMessage());
+        return ResponseEntity.status(e.getErrorCode().getStatus())
+                .body(Response.error(e.getErrorCode().getMessage()));
     }
 
     @ExceptionHandler(value = RuntimeException.class)
-    public Response<Void> runtimeExceptionHandler(RuntimeException e) {
+    public ResponseEntity<Response<Void>> runtimeExceptionHandler(RuntimeException e) {
         log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur : {}", e.toString());
-        return Response.runtimeError(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Response.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity<List<Response<Void>>> argsValidHandler(MethodArgumentNotValidException e) {
+        log.error("error occur: {}" , e.getStackTrace());
+        log.error("error occur : {}", e.toString());
+        List<Response<Void>> erros = new ArrayList<>();
+        e.getFieldErrors().stream()
+                .forEach(error -> erros.add(Response.error(error.getField(), error.getDefaultMessage())));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(erros);
     }
 }
