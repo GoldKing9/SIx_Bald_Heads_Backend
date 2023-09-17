@@ -8,5 +8,11 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
+
     boolean existsByNickname(String updateNickname);
+
+    boolean existsByNickname(String nickname);
+
+    boolean existsByEmail(String email);
+
 }

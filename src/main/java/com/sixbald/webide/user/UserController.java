@@ -12,6 +12,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.sixbald.webide.user.dto.request.EmailCheckRequest;
+import com.sixbald.webide.user.dto.request.NicknameRequest;
+import com.sixbald.webide.user.dto.request.PasswordRequest;
+import com.sixbald.webide.user.dto.request.SendEmailRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @Slf4j
 @RestController
@@ -48,5 +57,26 @@ public class UserController {
         Long userId = 1L; // 임시
 
         return userService.updateNickname(userId, requestNickname);
+    }
+  
+    @PostMapping("/nickcheck")
+    public Response<Void> nicknameCheck(@RequestBody NicknameRequest request) {
+        return userService.nicknameCheck(request);
+    }
+
+    //TODO @Authentication 처리해줘야 한다.
+    @PostMapping("/password")
+    public Response<Void> passwordEdit(@RequestBody PasswordRequest request) {
+        return userService.passwordEdit(request);
+    }
+
+    @PostMapping("/sendmail")
+    public Response<Void> sendMail(@RequestBody SendEmailRequest request) {
+        return userService.sendMail(request);
+    }
+
+    @PostMapping("/emailcheck")
+    public Response<Void> emailCheck(@RequestBody EmailCheckRequest request) {
+        return userService.emailCheck(request);
     }
 }
