@@ -19,6 +19,8 @@ public class User extends BaseEntity {
     private String email;
     @Column(unique = true, length = 100)
     private String nickname;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
     private String profileImgUrl;
 
     @Builder
@@ -36,9 +38,8 @@ public class User extends BaseEntity {
 
     public void updateNickname(String updateNickname) {
         this.nickname = updateNickname;
-      
-    void updatePassword(String password) {
+    }
+    public void updatePassword(String password) {
         this.password = password;
-
     }
 }

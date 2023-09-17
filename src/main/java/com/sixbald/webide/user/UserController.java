@@ -1,21 +1,19 @@
 package com.sixbald.webide.user;
 
 import com.sixbald.webide.common.Response;
-import com.sixbald.webide.user.dto.request.RequestNickname;
+import com.sixbald.webide.user.dto.request.*;
 import com.sixbald.webide.user.dto.response.UserDTO;
+import com.sixbald.webide.user.dto.response.UserLoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.sixbald.webide.user.dto.request.EmailCheckRequest;
-import com.sixbald.webide.user.dto.request.NicknameRequest;
-import com.sixbald.webide.user.dto.request.PasswordRequest;
-import com.sixbald.webide.user.dto.request.SendEmailRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +28,33 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+
+    @ApiResponses(value={
+            @ApiResponse(description = "회원가입 성공", responseCode = "200"),
+            @ApiResponse(description = "회원가입 실패", responseCode = "400")
+    })
+    @PostMapping("/signup")
+    public Response<Void> signup(@RequestBody @Valid UserSignupRequest dto){
+        userService.signup(dto);
+        return Response.success("회원가입 성공");
+    }
+
+    @ApiResponses(value={
+            @ApiResponse(description = "로그인 성공", responseCode = "200"),
+            @ApiResponse(description = "로그인 실패", responseCode = "400")
+    })
+    @PostMapping("/login")
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
+        return Response.success("로그인에 성공했습니다.", userService.login(request));
+    }
+
+    @ApiResponses(value={
+            @ApiResponse(description = "로그아웃 성공", responseCode = "200")
+    })
+    @PostMapping("/logout")
+    public Response<Void> logout(){
+        return Response.success("로그아웃 되었습니다.");
+    }
 
     // 프로필 조회
     @GetMapping("/profile")
@@ -64,7 +89,7 @@ public class UserController {
         return userService.nicknameCheck(request);
     }
 
-    //TODO @Authentication 처리해줘야 한다.
+    // TODO @Authentication 처리해줘야 한다.
     @PostMapping("/password")
     public Response<Void> passwordEdit(@RequestBody PasswordRequest request) {
         return userService.passwordEdit(request);

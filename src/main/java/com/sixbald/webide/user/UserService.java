@@ -1,23 +1,27 @@
 package com.sixbald.webide.user;
 
 import com.sixbald.webide.common.Response;
+import com.sixbald.webide.config.auth.LoginUser;
+import com.sixbald.webide.config.utils.JwtUtils;
 import com.sixbald.webide.domain.User;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
 import com.sixbald.webide.repository.UserRepository;
-import com.sixbald.webide.user.dto.request.RequestNickname;
+import com.sixbald.webide.user.dto.request.*;
 import com.sixbald.webide.user.dto.response.UserDTO;
+import com.sixbald.webide.user.dto.response.UserLoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.sixbald.webide.config.RedisUtil;
-import com.sixbald.webide.user.dto.request.EmailCheckRequest;
-import com.sixbald.webide.user.dto.request.NicknameRequest;
-import com.sixbald.webide.user.dto.request.PasswordRequest;
-import com.sixbald.webide.user.dto.request.SendEmailRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +41,9 @@ public class UserService {
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
     private final S3Service s3Service;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
     
     @Transactional(readOnly = true)
     public UserDTO getUserInfo(Long userId){
@@ -156,6 +163,38 @@ public class UserService {
         }
 
         return code.toString();
+    }
+
+    @Transactional
+    public void signup(UserSignupRequest dto) {
+        if(!dto.isEmailValid()){
+            throw new GlobalException(ErrorCode.UNCHECKED_EMAIL_VALID);
+        }else if(!dto.isNicknameValid()){
+            throw new GlobalException(ErrorCode.UNCHECKED_NICKNAME_VALID);
         }
+
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        User user = dto.toEntity();
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public UserLoginResponse login(UserLoginRequest request){
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        String token = jwtUtils.generateJwt(loginUser);
+
+        return UserLoginResponse.builder()
+                .userId(loginUser.getUser().getId())
+                .nickname(loginUser.getUser().getNickname())
+                .accessToken(token)
+                .build();
+    }
  }
         
