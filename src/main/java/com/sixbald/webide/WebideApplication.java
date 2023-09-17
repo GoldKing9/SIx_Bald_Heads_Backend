@@ -15,7 +15,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SecurityScheme(type = SecuritySchemeType.APIKEY, name = "Authorization", in = SecuritySchemeIn.HEADER)
 @OpenAPIDefinition(info = @Info(title = "여섯대머리", version = "1.0.0"), security = { @SecurityRequirement(name = "Authorization") })
 public class WebideApplication {
-
+	static {
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
 	public static void main(String[] args) {
 		SpringApplication.run(WebideApplication.class, args);
 	}

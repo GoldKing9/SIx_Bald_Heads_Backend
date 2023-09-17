@@ -1,8 +1,5 @@
 package com.sixbald.webide.common;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.SchemaProperties;
-import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +20,11 @@ public class Response<T> {
     public static <T> Response<T> success(String message, T data){
         return new Response<>("Success", message, data);
     }
+
+    public static <T> Response<T> success(T data){
+        return new Response<>("Success", null, data);
+    }
+
 
     public static Response<Void> error(String status, String message){
         return new Response<>(status, message, null);

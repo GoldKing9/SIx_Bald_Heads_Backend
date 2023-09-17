@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Entity
@@ -18,6 +19,8 @@ public class User extends BaseEntity {
     private String email;
     @Column(unique = true, length = 100)
     private String nickname;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
     private String profileImgUrl;
 
     @Builder
@@ -26,6 +29,17 @@ public class User extends BaseEntity {
         this.password = password;
         this.email = email;
         this.nickname = nickname;
-        this.profileImgUrl = "https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w480-h960-rw";
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    public void updateImage(String imageUrl){
+        this.profileImgUrl = imageUrl;
+    }
+
+    public void updateNickname(String updateNickname) {
+        this.nickname = updateNickname;
+    }
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

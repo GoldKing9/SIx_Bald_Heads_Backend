@@ -17,10 +17,8 @@ public class LoginUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO : userEntity Role 추가 후 변경
-
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> "ROLE_USER");
+        authorities.add(() -> user.getRole().name());
         return authorities;
     }
 

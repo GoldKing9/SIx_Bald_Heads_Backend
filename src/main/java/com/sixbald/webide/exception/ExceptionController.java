@@ -36,11 +36,11 @@ public class ExceptionController {
     public ResponseEntity<List<Response<Void>>> argsValidHandler(MethodArgumentNotValidException e) {
         log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur : {}", e.toString());
-        List<Response<Void>> erros = new ArrayList<>();
+        List<Response<Void>> errors = new ArrayList<>();
         e.getFieldErrors().stream()
-                .forEach(error -> erros.add(Response.error(error.getField(), error.getDefaultMessage())));
+                .forEach(error -> errors.add(Response.error(error.getField(), error.getDefaultMessage())));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(erros);
+                .body(errors);
     }
 }

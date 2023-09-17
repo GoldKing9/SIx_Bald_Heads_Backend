@@ -14,6 +14,7 @@ public class GlobalException extends RuntimeException{
         this.errorCode = code;
         this.message = null;
     }
+
     @Override
     public String getMessage() {
         if(this.message == null){

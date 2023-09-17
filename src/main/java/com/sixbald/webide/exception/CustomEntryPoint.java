@@ -23,7 +23,7 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String loginException = authException.getClass().getSimpleName();
         if(loginException.equals(UsernameNotFoundException.class.getSimpleName())){
-            setResponse(response,"USER_NOT_FOUDN", "아이디가 일치하지 않습니다.");
+            setResponse(response,"USER_NOT_FOUND", "아이디가 일치하지 않습니다.");
         }else if(loginException.equals(BadCredentialsException.class.getSimpleName())){
             setResponse(response,"INVALID_PASSWORD", "비밀번호가 일치하지 않습니다.");
         }
