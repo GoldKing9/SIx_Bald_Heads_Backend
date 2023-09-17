@@ -19,13 +19,16 @@ public class User extends BaseEntity {
     @Column(unique = true, length = 100)
     private String nickname;
     private String profileImgUrl;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Builder
-    public User(Long id, String password, String email, String nickname, String profileImgUrl) {
+    public User(Long id, String password, String email, String nickname, UserRole role, String profileImgUrl) {
         this.id = id;
         this.password = password;
         this.email = email;
         this.nickname = nickname;
+        this.role = role;
         this.profileImgUrl = profileImgUrl;
     }
 }

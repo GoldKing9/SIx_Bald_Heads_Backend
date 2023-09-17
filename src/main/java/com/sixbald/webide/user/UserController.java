@@ -1,7 +1,9 @@
 package com.sixbald.webide.user;
 
 import com.sixbald.webide.common.Response;
+import com.sixbald.webide.user.dto.request.LoginRequest;
 import com.sixbald.webide.user.dto.request.SignupRequest;
+import com.sixbald.webide.user.dto.response.LoginResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,11 @@ public class UserController {
     public Response<Void> signup(@Valid @RequestBody SignupRequest request) {
         userService.signup(request);
         return Response.success("회원가입에 성공했습니다.", null);
+    }
+
+    @PostMapping("/login")
+    public <T> Response<LoginResponse> login(@RequestBody LoginRequest request) {
+        return Response.success("로그인에 성공했습니다.", userService.login(request));
     }
 
 }

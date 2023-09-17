@@ -10,7 +10,7 @@ spring:
 
   redis:
     host: localhost
-    port:
+    port: 6379
 
   jpa:
     hibernate:
@@ -18,7 +18,32 @@ spring:
     properties:
       hibernate:
         format_sql: true
+#  jpa:
+#    database: mysql
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    hibernate:
+#      ddl-auto: create
+#      show-sql: true
 
 jwt:
   token:
     secret: "secretKey"
+  app:
+    jwtSecretKey: "secretKey"
+
+
+#server:
+#  servlet:
+#    encoding:
+#      force-response: true
+#spring:
+#  jpa:
+#    database: mysql
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    hibernate:
+#      ddl-auto: create
+#      show-sql: true
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/webide?serverTimezone=Asia/Seoul
+#    username: root
