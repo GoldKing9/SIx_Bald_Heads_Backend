@@ -2,6 +2,7 @@ package com.sixbald.webide.user;
 
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
+import com.sixbald.webide.domain.User;
 import com.sixbald.webide.user.dto.request.*;
 import com.sixbald.webide.user.dto.response.UserDTO;
 import com.sixbald.webide.user.dto.response.UserLoginResponse;
@@ -81,8 +82,7 @@ public class UserController {
             @NotNull @RequestParam MultipartFile imageUrl,
             @AuthenticationPrincipal LoginUser loginUser
     ) {
-        Long userId = loginUser.getUser().getId();
-        userService.updateUserProfileImage(userId, imageUrl);
+        userService.updateUserProfileImage(loginUser.getUser().getId(), imageUrl);
         return Response.success("프로필 이미지 수정 성공");
     }
     // 프로필 닉네임 수정
@@ -93,8 +93,7 @@ public class UserController {
             @RequestBody RequestNickname requestNickname,
             @AuthenticationPrincipal LoginUser loginUser
     ){
-        Long userId = loginUser.getUser().getId();
-        return userService.updateNickname(userId, requestNickname);
+        return userService.updateNickname(loginUser.getUser().getId(), requestNickname);
     }
 
     @PostMapping("/nickcheck")
