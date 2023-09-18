@@ -1,6 +1,7 @@
 package com.sixbald.webide.user;
 
 import com.sixbald.webide.common.Response;
+import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.user.dto.request.*;
 import com.sixbald.webide.user.dto.response.UserDTO;
 import com.sixbald.webide.user.dto.response.UserLoginResponse;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,8 +98,8 @@ public class UserController {
     // TODO @Authentication 처리해줘야 한다.
 
     @PostMapping("/password")
-    public Response<Void> passwordEdit(@RequestBody PasswordRequest request) {
-        return userService.passwordEdit(request);
+    public Response<Void> passwordEdit(@RequestBody @Valid PasswordRequest request, @AuthenticationPrincipal LoginUser loginUser)   {
+        return userService.passwordEdit(request,loginUser);
     }
 
     @PostMapping("/sendmail")
