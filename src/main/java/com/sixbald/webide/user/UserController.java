@@ -50,6 +50,11 @@ public class UserController {
         return Response.success("로그인에 성공했습니다.", userService.login(request));
     }
 
+    @PostMapping("/reissue")
+    public Response<UserLoginResponse> reissue(@RequestBody RefreshTokenRequest request){
+        return Response.success("토큰 발급에 성공했습니다.", userService.reissue(request.getRefreshToken()));
+    }
+
     @ApiResponses(value={
             @ApiResponse(description = "로그아웃 성공", responseCode = "200")
     })
@@ -57,8 +62,8 @@ public class UserController {
     public Response<Void> logout(){
         return Response.success("로그아웃 되었습니다.");
     }
-
     // 프로필 조회
+
     @GetMapping("/profile")
     @Operation(summary = "프로필 조회")
     public Response<UserDTO> findUserInfo(){
@@ -66,8 +71,8 @@ public class UserController {
         UserDTO data = userService.getUserInfo(userId);
         return Response.success("회원 조회에 성공하셨습니다", data);
     }
-
     //프로필 이미지 수정
+
     @PutMapping("/profile/image")
     @Operation(summary = "프로필 이미지 수정")
     public Response<Void> updateImage(@NotNull @RequestParam MultipartFile imageUrl) {
@@ -75,8 +80,8 @@ public class UserController {
         userService.updateUserProfileImage(userId, imageUrl);
         return Response.success("프로필 이미지 수정 성공");
     }
-
     // 프로필 닉네임 수정
+
     @PutMapping("/profile/nickname")
     @Operation(summary = "프로필 닉네임 수정")
     public Response<Void> updateNickname(@RequestBody RequestNickname requestNickname){
@@ -85,13 +90,13 @@ public class UserController {
 
         return userService.updateNickname(userId, requestNickname);
     }
-  
+
     @PostMapping("/nickcheck")
     public Response<Void> nicknameCheck(@RequestBody NicknameRequest request) {
         return userService.nicknameCheck(request);
     }
-
     // TODO @Authentication 처리해줘야 한다.
+
     @PostMapping("/password")
     public Response<Void> passwordEdit(@RequestBody @Valid PasswordRequest request, @AuthenticationPrincipal LoginUser loginUser)   {
         return userService.passwordEdit(request,loginUser);

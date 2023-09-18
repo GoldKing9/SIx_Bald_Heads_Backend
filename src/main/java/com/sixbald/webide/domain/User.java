@@ -5,10 +5,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Entity
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -24,11 +25,12 @@ public class User extends BaseEntity {
     private String profileImgUrl;
 
     @Builder
-    public User(Long id, String password, String email, String nickname, String profileImgUrl) {
+    public User(Long id, String password, Role role, String email, String nickname, String profileImgUrl) {
         this.id = id;
         this.password = password;
         this.email = email;
         this.nickname = nickname;
+        this.role = Role.USER;
         this.profileImgUrl = profileImgUrl;
     }
 

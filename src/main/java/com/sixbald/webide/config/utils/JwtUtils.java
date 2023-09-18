@@ -26,6 +26,8 @@ public class JwtUtils {
     private String secretKey;
     @Value("${jwt.token.expired-time-ms}")
     private Long expiredTime;
+    @Value("${jwt.refreshToken.expired-time}")
+    private Long refreshTokenExpiredTime;
     private Key key;
 
     @PostConstruct
@@ -43,6 +45,15 @@ public class JwtUtils {
                 .claim("role", loginUser.getUser().getRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiredTime))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createRefreshToken(){
+        return Jwts.builder()
+                .setClaims(Jwts.claims())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
