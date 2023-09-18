@@ -25,4 +25,12 @@ public class FileController {
     ){
         return Response.success("해당 파일 조회를 성공했습니다", fileService.getFileContents(requestFileDTO));
     }
+    // 파일 삭제
+    @DeleteMapping("/files")
+    public Response<Void> deleteContents(
+            @RequestBody RequestFileDTO requestFileDTO
+    ){
+        fileService.deleteFileContents(requestFileDTO);
+        return Response.success("해당 파일 삭제를 성공했습니다");
+    }
 }
