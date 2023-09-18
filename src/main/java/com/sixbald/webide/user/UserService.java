@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -44,9 +45,9 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    
+
     @Transactional(readOnly = true)
-    public UserDTO getUserInfo(Long userId){
+    public UserDTO getUserInfo(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
@@ -65,7 +66,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
-        if(!user.getProfileImgUrl().isEmpty()){
+        if (!user.getProfileImgUrl().isEmpty()) {
             log.info("기존 이미지 경로 : {}", user.getProfileImgUrl());
             String result = s3Service.deleteFile(user.getProfileImgUrl()); //삭제 로직
             log.info("기존 프로필 이미지 삭제 :{}", result);
@@ -76,22 +77,23 @@ public class UserService {
         user.updateImage(imgPath);
         userRepository.save(user);
     }
+
     @Transactional
     public Response<Void> updateNickname(Long userId, RequestNickname requestNickname) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
         String updateNickname = requestNickname.getNickname();
-        if(userRepository.existsByNickname(updateNickname)){
+        if (userRepository.existsByNickname(updateNickname)) {
             throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
         }
         user.updateNickname(updateNickname);
         userRepository.save(user);
 
         return Response.success("프로필 닉네임 수정 성공");
-        }
-        
-         public Response<Void> nicknameCheck(NicknameRequest request) {
+    }
+
+    public Response<Void> nicknameCheck(NicknameRequest request) {
         String nickname = request.getNickname();
         if (userRepository.existsByNickname(nickname)) {
             throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
@@ -99,11 +101,8 @@ public class UserService {
         return Response.success("사용가능한 닉네임 입니다");
     }
 
-
-    // Todo : Token 에 대한 예외처리 해줘야 한다.
-    public Response<Void> passwordEdit(PasswordRequest request) {
-        String password = request.getPassword();
-
+    @Transactional
+    public Response<Void> passwordEdit(PasswordRequest request, LoginUser loginUser) {
         /**
          * 1. 검증된 로그인 유저 id 값 가져오기
          * 2. userRepository 에서 유저찾기 ex) userRepository.findBYId(검증된 로그인 유저 id)
@@ -112,9 +111,22 @@ public class UserService {
          * user.updatePassword(password);
          * return Response.success("비밀번호 수정 성공");
          */
-        return Response.success("비밀번호 수정 성공");
+        String password = request.getPassword();
+        Long loginUserid = loginUser.getUser().getId();
+
+        User user = userRepository.findById(loginUserid)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+
+        String updatePwd = passwordEncoder.encode(password);
+        if (passwordEncoder.matches( password,user.getPassword())) {
+            throw new GlobalException(ErrorCode.ALREADY_USING_PASSWORD);
+        } else {
+            user.updatePassword(updatePwd);
+            return Response.success("비밀번호 수정 성공");
+        }
     }
 
+    @Transactional
     public Response<Void> sendMail(SendEmailRequest request) {
         String email = request.getEmail();
         String authCode = createdCode();
@@ -133,6 +145,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public Response<Void> emailCheck(EmailCheckRequest request) {
         String code = request.getCode();
         String email = request.getEmail();
@@ -167,9 +180,9 @@ public class UserService {
 
     @Transactional
     public void signup(UserSignupRequest dto) {
-        if(!dto.isEmailValid()){
+        if (!dto.isEmailValid()) {
             throw new GlobalException(ErrorCode.UNCHECKED_EMAIL_VALID);
-        }else if(!dto.isNicknameValid()){
+        } else if (!dto.isNicknameValid()) {
             throw new GlobalException(ErrorCode.UNCHECKED_NICKNAME_VALID);
         }
 
@@ -180,7 +193,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserLoginResponse login(UserLoginRequest request){
+    public UserLoginResponse login(UserLoginRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -196,5 +209,5 @@ public class UserService {
                 .accessToken(token)
                 .build();
     }
- }
+}
         
