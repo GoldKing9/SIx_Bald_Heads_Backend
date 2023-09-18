@@ -32,15 +32,15 @@ public class ExceptionController {
                 .body(Response.error(e.getMessage()));
     }
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<List<Response<Void>>> argsValidHandler(MethodArgumentNotValidException e) {
-        log.error("error occur: {}" , e.getStackTrace());
-        log.error("error occur : {}", e.toString());
-        List<Response<Void>> errors = new ArrayList<>();
-        e.getFieldErrors().stream()
-                .forEach(error -> errors.add(Response.error(error.getField(), error.getDefaultMessage())));
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errors);
-    }
+//    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+//    public ResponseEntity<List<Response<Void>>> argsValidHandler(MethodArgumentNotValidException e) {
+//        log.error("error occur: {}" , e.getStackTrace());
+//        log.error("error occur : {}", e.toString());
+//        List<Response<Void>> errors = new ArrayList<>();
+//        e.getFieldErrors().stream()
+//                .forEach(error -> errors.add(Response.error(error.getField(), error.getDefaultMessage())));
+//
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                .body(errors);
+//    }
 }

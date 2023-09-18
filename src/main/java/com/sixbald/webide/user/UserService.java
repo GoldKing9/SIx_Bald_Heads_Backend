@@ -108,14 +108,6 @@ public class UserService {
 
     @Transactional
     public Response<Void> passwordEdit(PasswordRequest request, LoginUser loginUser) {
-        /**
-         * 1. 검증된 로그인 유저 id 값 가져오기
-         * 2. userRepository 에서 유저찾기 ex) userRepository.findBYId(검증된 로그인 유저 id)
-         * 3. 코드 구현
-         * User user = userRepsitory.findById(id);
-         * user.updatePassword(password);
-         * return Response.success("비밀번호 수정 성공");
-         */
         String password = request.getPassword();
         Long loginUserid = loginUser.getUser().getId();
 
