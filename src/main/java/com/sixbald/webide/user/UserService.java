@@ -22,7 +22,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -71,7 +69,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
-        if (!user.getProfileImgUrl().isEmpty()) {
+        if(!user.getProfileImgUrl().isEmpty()){
             log.info("기존 이미지 경로 : {}", user.getProfileImgUrl());
             String result = s3Service.deleteFile(user.getProfileImgUrl()); //삭제 로직
             log.info("기존 프로필 이미지 삭제 :{}", result);
@@ -82,7 +80,6 @@ public class UserService {
         user.updateImage(imgPath);
         userRepository.save(user);
     }
-
     @Transactional
     public Response<Void> updateNickname(Long userId, RequestNickname requestNickname) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -97,7 +94,7 @@ public class UserService {
 
         return Response.success("프로필 닉네임 수정 성공");
     }
-
+        
     public Response<Void> nicknameCheck(NicknameRequest request) {
         String nickname = request.getNickname();
         if (userRepository.existsByNickname(nickname)) {
@@ -198,7 +195,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserLoginResponse login(UserLoginRequest request) {
+    public UserLoginResponse login(UserLoginRequest request){
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
