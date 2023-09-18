@@ -88,12 +88,13 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
+
         String updateNickname = requestNickname.getNickname();
-        if (userRepository.existsByNickname(updateNickname)) {
+        boolean nicknameValid = requestNickname.isNicknameValid();
+        if (!nicknameValid) {
             throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
         }
         user.updateNickname(updateNickname);
-        userRepository.save(user);
 
         return Response.success("프로필 닉네임 수정 성공");
     }

@@ -66,8 +66,10 @@ public class UserController {
 
     @GetMapping("/profile")
     @Operation(summary = "프로필 조회")
-    public Response<UserDTO> findUserInfo(){
-        Long userId = 1L; // 임시
+    public Response<UserDTO> findUserInfo(
+            @AuthenticationPrincipal LoginUser loginUser
+    ){
+        Long userId = loginUser.getUser().getId();
         UserDTO data = userService.getUserInfo(userId);
         return Response.success("회원 조회에 성공하셨습니다", data);
     }
@@ -75,8 +77,11 @@ public class UserController {
 
     @PutMapping("/profile/image")
     @Operation(summary = "프로필 이미지 수정")
-    public Response<Void> updateImage(@NotNull @RequestParam MultipartFile imageUrl) {
-        Long userId = 1L; // 임시
+    public Response<Void> updateImage(
+            @NotNull @RequestParam MultipartFile imageUrl,
+            @AuthenticationPrincipal LoginUser loginUser
+    ) {
+        Long userId = loginUser.getUser().getId();
         userService.updateUserProfileImage(userId, imageUrl);
         return Response.success("프로필 이미지 수정 성공");
     }
@@ -84,10 +89,11 @@ public class UserController {
 
     @PutMapping("/profile/nickname")
     @Operation(summary = "프로필 닉네임 수정")
-    public Response<Void> updateNickname(@RequestBody RequestNickname requestNickname){
-        //validation 으로 true, false
-        Long userId = 1L; // 임시
-
+    public Response<Void> updateNickname(
+            @RequestBody RequestNickname requestNickname,
+            @AuthenticationPrincipal LoginUser loginUser
+    ){
+        Long userId = loginUser.getUser().getId();
         return userService.updateNickname(userId, requestNickname);
     }
 
