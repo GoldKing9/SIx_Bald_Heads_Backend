@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,14 @@ public class ExceptionController {
         log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur : {}", e.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Response.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = IOException.class)
+    public ResponseEntity<Response<Void>> IOExceptionHandler(IOException e) {
+        log.error("error occur: {}" , e.getStackTrace());
+        log.error("error occur : {}", e.toString());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Response.error(e.getMessage()));
     }
 
