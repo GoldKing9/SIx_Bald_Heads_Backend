@@ -26,7 +26,10 @@ public enum ErrorCode {
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰입니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다."),
     ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다."),
-    CREATION_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "생성에 실패했습니다.")
+    FOLDER_OPERATION_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "입출력 에러"),
+    DUPLICATED_FOLDER(HttpStatus.BAD_REQUEST, "이미 존재하는 폴더입니다."),
+    FOLDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 폴더입니다."),
+    FOLDER_NOT_EMPTY(HttpStatus.BAD_REQUEST, "폴더가 비어있지 않습니다.")
     ;
 
 

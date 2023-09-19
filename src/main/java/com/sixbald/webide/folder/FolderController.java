@@ -17,4 +17,10 @@ public class FolderController {
         folderService.create(request);
         return Response.success("폴더 생성 성공");
     }
+
+    @DeleteMapping("/folders")
+    public Response<Void> deleteFolder(String path){
+        folderService.deleteFolder(path);
+        return Response.success("폴더 삭제 성공");
+    }
 }
