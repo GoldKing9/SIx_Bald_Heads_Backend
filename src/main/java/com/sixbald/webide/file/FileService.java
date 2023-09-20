@@ -1,5 +1,7 @@
 package com.sixbald.webide.file;
 
+import com.sixbald.webide.common.PathUtils;
+import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
 import com.sixbald.webide.file.dto.request.RequestFileDTO;
@@ -12,9 +14,10 @@ import java.io.*;
 @Service
 public class FileService {
 
-    public ResponseFileDTO getFileContents(RequestFileDTO requestFileDTO) {
+    public String getFileContents(RequestFileDTO requestFileDTO, LoginUser loginUser) {
+//        String path = "/Users/kyeongseon/Documents/Spring"+PathUtils.absolutePath(loginUser.getUser().getId(), requestFileDTO.getPath()); //test중
+        String path = PathUtils.absolutePath(loginUser.getUser().getId(), requestFileDTO.getPath());
         String fileName = requestFileDTO.getFileName();
-        String path = requestFileDTO.getPath();
         log.info("fileName : {}", fileName);
         log.info("path : {}", path);
 
@@ -36,14 +39,12 @@ public class FileService {
         }catch (Exception e){
             throw new GlobalException(ErrorCode.FILE_IOEXCEPTION);
         }
-        return ResponseFileDTO.builder()
-                .contents(sb.toString())
-                .build();
+        return sb.toString();
     }
 
-    public void deleteFileContents(RequestFileDTO requestFileDTO) {
+    public void deleteFileContents(RequestFileDTO requestFileDTO, LoginUser loginUser) {
         String fileName = requestFileDTO.getFileName();
-        String path = requestFileDTO.getPath();
+        String path =  PathUtils.absolutePath(loginUser.getUser().getId(), requestFileDTO.getPath());
         File file = new File(path, fileName);
 
         if(file.exists()){
