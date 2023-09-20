@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class PathUtils {
 
@@ -15,6 +16,12 @@ public class PathUtils {
 
     public static String absolutePath(Long userId, String path){
         return "/root/" + userId + path;
+    }
+
+    public static String parsePath(Path path){
+        String stringPath = path.toString();
+        int start = stringPath.indexOf("/src");
+        return stringPath.substring(start);
     }
 
     public static void createUserDirectory(Long userId) {
