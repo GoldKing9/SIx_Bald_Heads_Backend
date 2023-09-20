@@ -1,5 +1,7 @@
 package com.sixbald.webide.folder;
 
+import com.sixbald.webide.common.PathUtils;
+import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
 import com.sixbald.webide.folder.dto.PathRequest;
@@ -15,8 +17,10 @@ import java.nio.file.*;
 @Service
 public class FolderService {
 
-    public void create(PathRequest request) {
-        Path path = Paths.get(request.getPath() + "/" + request.getFolderName());
+    public void create(LoginUser loginUser, PathRequest request) {
+        String absolute = PathUtils.absolutePath(loginUser.getUser().getId(), request.getPath() + "/" + request.getFolderName());
+        Path path = Paths.get(absolute);
+
         if(Files.exists(path)){
             throw new GlobalException(ErrorCode.DUPLICATED_FOLDER);
         }
@@ -32,9 +36,9 @@ public class FolderService {
         }
     }
 
-    public void deleteFolder(String path) {
+    public void deleteFolder(LoginUser loginUser, String path) {
         try {
-            FileUtils.deleteDirectory(new File(path));
+            FileUtils.deleteDirectory(new File(PathUtils.absolutePath(loginUser.getUser().getId(), path)));
         }
         catch (IOException e) {
             throw new GlobalException(ErrorCode.FOLDER_OPERATION_FAILED, "폴더 삭제에 실패했습니다.");

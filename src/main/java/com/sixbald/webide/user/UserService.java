@@ -1,5 +1,6 @@
 package com.sixbald.webide.user;
 
+import com.sixbald.webide.common.PathUtils;
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.config.utils.JwtUtils;
@@ -192,6 +193,7 @@ public class UserService {
 
         User user = dto.toEntity();
         userRepository.save(user);
+        PathUtils.createUserDirectory(user.getId());
     }
 
     @Transactional
