@@ -10,23 +10,27 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1/file-tree")
 public class FileController {
     private final FileService fileService;
 
 
     // 파일 생성
-    @PostMapping("/files")
-    public Response<Void> createFile(@RequestBody RequestFileDTO requestFileDTO, @AuthenticationPrincipal LoginUser loginUser) {
+    @PostMapping("/file")
+    public Response<Void> createFile(@RequestBody RequestFileDTO requestFileDTO, @AuthenticationPrincipal LoginUser loginUser) throws IOException {
+        fileService.createFile(loginUser, requestFileDTO);
         return Response.success("파일 생성 성공");
     }
 
     // 파일 이름 수정
-    @PutMapping("/files/name")
+    @PutMapping("/file/rename")
     public Response<Void> renameFile(@RequestBody RenameFileRequestDTO renameFileRequestDTO, @AuthenticationPrincipal LoginUser loginUser) {
+        fileService.renameFile(loginUser, renameFileRequestDTO);
         return Response.success("파일 이름 수정 성공");
     }
 }

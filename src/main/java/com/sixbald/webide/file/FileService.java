@@ -1,6 +1,8 @@
 package com.sixbald.webide.file;
 
 
+import com.sixbald.webide.common.PathUtils;
+import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.file.dto.request.RenameFileRequestDTO;
 import com.sixbald.webide.file.dto.request.RequestFileDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +16,14 @@ import java.io.IOException;
 @Service
 public class FileService {
 
-    // 파일 업로드 디렉토리 설정
-    @Value("${file.upload.dir}")
-    private String uploadDir;
 
     // 파일 생성
-    public void createFile(RequestFileDTO requestFileDTO) throws IOException {
+    public void createFile(LoginUser loginUser, RequestFileDTO requestFileDTO) throws IOException {
         String path = requestFileDTO.getPath();
         String fileName = requestFileDTO.getFileName();
+        String abPath = PathUtils.absolutePath(loginUser.getUser().getId(), path);
 
-        File file = new File(path, fileName);
+        File file = new File(abPath, fileName);
         log.info("path : '{}', fileName : '{}'", path, fileName);
 
         if (!file.exists()) { // 파일이 존재하지 않으면 생성
@@ -41,14 +41,15 @@ public class FileService {
     }
 
     // 파일 이름 수정
-    public void renameFile(RenameFileRequestDTO renameFileRequestDTO) {
+    public void renameFile(LoginUser loginUser, RenameFileRequestDTO renameFileRequestDTO) {
         String path = renameFileRequestDTO.getPath();
         String fileName = renameFileRequestDTO.getFileName();
         String fileRename = renameFileRequestDTO.getFileRename();
+        String abPath = PathUtils.absolutePath(loginUser.getUser().getId(), path);
 
-        File originFile = new File(path, fileName);
-        File renamedFile = new File(path, fileRename);
-        log.info("path : '{}', fileRename : '{}'", path, fileRename);
+        File originFile = new File(abPath, fileName);
+        File renamedFile = new File(abPath, fileRename);
+        log.info("abPath : '{}', fileRename : '{}'", renamedFile.getPath(), fileRename);
 
         if (originFile.exists()) {
             if (originFile.renameTo(renamedFile))
