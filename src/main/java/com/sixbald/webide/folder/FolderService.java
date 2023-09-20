@@ -24,7 +24,7 @@ public class FolderService {
         try{
             FileUtils.moveDirectoryToDirectory(currentFolder, moveFolder, true); //true일 경우 : 상위 디렉토리가 없는 경우 자동 생성
         }catch (IOException e){
-            throw new GlobalException(ErrorCode.FILE_AND_DIRECTORY_MOVE_ERROR);
+            throw new GlobalException(ErrorCode.DUPLICATED_FOLDER_NAME);
         }
 
     }

@@ -26,7 +26,7 @@ public enum ErrorCode {
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰입니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다."),
     ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다."),
-    FILE_AND_DIRECTORY_MOVE_ERROR(HttpStatus.UNAUTHORIZED, "폴더 이동에 실패했습니다");
+    DUPLICATED_FOLDER_NAME(HttpStatus.UNAUTHORIZED, "같은 이름의 폴더가 이미 존재합니다.");
 
     private HttpStatus status;
     private String message;
