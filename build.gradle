@@ -41,6 +41,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	//swaager
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	// 폴더이동 관련 라이브러리
+	implementation 'commons-io:commons-io:2.11.0'
 }
 
 tasks.named('test') {
