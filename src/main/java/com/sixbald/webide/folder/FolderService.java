@@ -15,9 +15,9 @@ import java.io.IOException;
 @Service
 public class FolderService {
     public void moveFolderAndFile(RequestFolderDTO requestFolderDTO, LoginUser loginUser) {
-        String currentPath = "/Users/kyeongseon/Documents/Spring"+PathUtils.absolutePath(loginUser.getUser().getId(), requestFolderDTO.getCurrentPath()); // 임시로 경로를 박아두었습니다
+        String currentPath = PathUtils.absolutePath(loginUser.getUser().getId(), requestFolderDTO.getCurrentPath()); 
         log.info("현재 경로 : {}", currentPath);
-        String movePath = "/Users/kyeongseon/Documents/Spring"+PathUtils.absolutePath(loginUser.getUser().getId(), requestFolderDTO.getMovePath());
+        String movePath = PathUtils.absolutePath(loginUser.getUser().getId(), requestFolderDTO.getMovePath());
         log.info("현재 경로 : {}", movePath);
         File currentFolder = new File(currentPath);
         File moveFolder = new File(movePath);
