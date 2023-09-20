@@ -1,4 +1,4 @@
-package com.sixbald.webide.folder.dto;
+package com.sixbald.webide.folder;
 
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
