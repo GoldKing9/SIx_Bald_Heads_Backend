@@ -24,7 +24,7 @@ public class FileService {
         String abPath = PathUtils.absolutePath(loginUser.getUser().getId(), path);
 
         File file = new File(abPath, fileName);
-        log.info("path : '{}', fileName : '{}'", path, fileName);
+        log.info("path : '{}', fileName : '{}'", file.getPath(), fileName);
 
         if (!file.exists()) { // 파일이 존재하지 않으면 생성
             try {
