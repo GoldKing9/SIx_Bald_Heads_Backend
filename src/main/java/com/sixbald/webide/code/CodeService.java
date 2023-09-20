@@ -25,7 +25,7 @@ public class CodeService {
 
         File saveFile = new File(realPath, fileName);
         try {
-            FileWriter writer = new FileWriter(saveFile, true);
+            FileWriter writer = new FileWriter(saveFile, false);
             writer.write(content);
             writer.close();
 
