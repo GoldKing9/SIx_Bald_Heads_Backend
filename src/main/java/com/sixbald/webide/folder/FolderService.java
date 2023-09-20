@@ -1,6 +1,8 @@
 package com.sixbald.webide.folder;
 
+import com.sixbald.webide.common.PathUtils;
 import com.sixbald.webide.common.Response;
+import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
 import com.sixbald.webide.folder.dto.request.FolderRenameRequest;
@@ -12,13 +14,16 @@ import java.io.File;
 @Service
 @Slf4j
 public class FolderService {
-    public void renameFolder(FolderRenameRequest request) {
+    public void renameFolder(LoginUser loginUser,FolderRenameRequest request) {
+        Long userId = loginUser.getUser().getId();
         String path = request.getPath();
+
+        String realPath = PathUtils.absolutePath(userId, path);
         String folderName = request.getFolderName();
         String folderRename = request.getFolderRename();
 
-        File oldFile = new File(path, folderName);
-        File newFile = new File(path, folderRename);
+        File oldFile = new File(realPath, folderName);
+        File newFile = new File(realPath, folderRename);
 
         if (oldFile.exists()) {
             if (!newFile.exists()) {
