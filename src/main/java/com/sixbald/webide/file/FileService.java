@@ -82,17 +82,25 @@ public class FileService {
         File file = new File(abPath, fileName);
         log.info("path : '{}', fileName : '{}'", file.getPath(), fileName);
 
-        if (!file.exists()) { // 파일이 존재하지 않으면 생성
-            try {
-                if (file.createNewFile())
-                    log.info("파일 생성 성공");
-                else
-                    log.info("파일 생성 실패");
-            } catch (IOException e) { // 디스크 공간이 부족하거나 파일 시스템에 문제가 있을 때 발생
-                throw new IOException("파일 생성이 불가능합니다.", e);
+        try {
+            // 파일이 이미 존재하는지 확인
+            if (file.exists()) {
+                log.info("같은 이름의 파일은 존재할 수 없습니다.");
+                throw new GlobalException(ErrorCode.CANNOT_EXIST_FILE);
             }
-        } else { // 파일이 이미 존재하면
-            log.info("파일이 이미 존재합니다.");
+
+            // 파일이 존재하지 않으면 파일 생성
+            if (file.createNewFile()) {
+                log.info("파일 생성 성공");
+            } else {
+                log.info("파일 생성 실패");
+                throw new GlobalException(ErrorCode.FILE_CREATE_FAIL);
+            }
+
+        } catch (IOException e) { // 해당 경로나 폴더 없음, 디스크 공간 부족, 파일 시스템 등
+            log.info("파일 입출력시 문제가 발생했습니다");
+            throw new GlobalException(ErrorCode.FILE_IOEXCEPTION);
+
         }
     }
 
@@ -103,17 +111,34 @@ public class FileService {
         String fileRename = renameFileRequestDTO.getFileRename();
         String abPath = PathUtils.absolutePath(loginUser.getUser().getId(), path);
 
-        File originFile = new File(abPath, fileName);
-        File renamedFile = new File(abPath, fileRename);
-        log.info("abPath : '{}', fileRename : '{}'", renamedFile.getPath(), fileRename);
+        File oldFile = new File(abPath, fileName);
+        File newFile = new File(abPath, fileRename);
+        log.info("abPath : '{}', fileRename : '{}'", newFile.getPath(), fileRename);
 
-        if (originFile.exists()) {
-            if (originFile.renameTo(renamedFile))
+        try {
+            // 기존 파일이 존재하는지 확인
+            if (!oldFile.exists()) {
+                log.info("파일이 존재하지 않습니다");
+                throw new GlobalException(ErrorCode.FILE_NOT_FOUND);
+            }
+
+            // 새 파일 이름이 이미 사용 중인지 확인
+            if (newFile.exists()) {
+                log.info("이미 사용중인 파일 이름 입니다.");
+                throw new GlobalException(ErrorCode.ALREADY_USING_FILE_NAME);
+            }
+
+            // 파일 이름 수정
+            if (oldFile.renameTo(newFile)) {
                 log.info("파일 이름 수정 성공");
-            else
+            } else {
                 log.info("파일 이름 수정 실패");
-        } else {
-            log.info("이름을 수정할 파일이 없습니다.");
+                throw new GlobalException(ErrorCode.FAIL_TO_RENAME_FILE);
+            }
+
+        } catch (NullPointerException e) {
+            log.error("NullPointerException 발생. 적절한 파라미터인지 확인하세요.");
+            throw new GlobalException(ErrorCode.NULL_POINTER_EXCEPTION);
         }
     }
   public Response<Void> moveFile(LoginUser loginUser, FileMoveRequest request) {
