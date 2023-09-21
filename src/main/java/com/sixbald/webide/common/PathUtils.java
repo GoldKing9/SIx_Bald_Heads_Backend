@@ -13,7 +13,7 @@ public class PathUtils {
 
 
     public static String absolutePath(Long userId, String path){
-        return "/root/" + userId + path;
+        return "/home/ubuntu/root/" + userId + path;
     }
 
     public static String parsePath(Path path){
@@ -23,7 +23,7 @@ public class PathUtils {
     }
 
     public static void createUserDirectory(Long userId) {
-        File file = new File("/root/"+userId+"/src");
+        File file = new File("/home/ubuntu/root/"+userId+"/src");
 
         try {
             FileUtils.forceMkdir(file);

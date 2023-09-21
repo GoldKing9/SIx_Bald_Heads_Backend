@@ -6,6 +6,10 @@ import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.file.dto.FileMoveRequest;
 import com.sixbald.webide.file.dto.request.RenameFileRequestDTO;
 import com.sixbald.webide.file.dto.request.RequestFileDTO;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +37,8 @@ public class FileController {
     }
 
     @DeleteMapping("/file")
+    @Parameter(name = "path", in = ParameterIn.QUERY)
+    @Parameter(name = "fileName", in = ParameterIn.QUERY)
     public Response<Void> deleteContents(
             @ModelAttribute RequestFileDTO requestFileDTO,
             @AuthenticationPrincipal LoginUser loginUser
