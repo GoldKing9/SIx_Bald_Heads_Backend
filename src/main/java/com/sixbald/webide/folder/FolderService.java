@@ -30,7 +30,7 @@ public class FolderService {
             throw new GlobalException(ErrorCode.NOT_FOUND_FOLDER);
         }catch (IOException e){
             log.info("IOException");
-            throw new GlobalException(ErrorCode.DUPLICATED_FOLDER_NAME);
+            throw new GlobalException(ErrorCode.FOLDER_MOVE_FAIL);
         }
 
     }
