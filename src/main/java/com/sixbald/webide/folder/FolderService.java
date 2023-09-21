@@ -58,8 +58,7 @@ public class FolderService {
                     .toList();
         }
         catch(IOException e){
-            e.printStackTrace();
-            throw new GlobalException(ErrorCode.FOLDER_OPERATION_FAILED, "파일 읽기 실패");
+            throw new GlobalException(ErrorCode.FOLDER_NOT_FOUND, "존재하지 않는 폴더입니다." + PathUtils.absolutePath(loginUser.getUser().getId(), path));
         }
 
         Node node = Node.builder()
