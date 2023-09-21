@@ -25,10 +25,13 @@ public enum ErrorCode {
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰입니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다."),
+
     ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다."),
     FILE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "파일이 존재하지 않습니다"),
     FILE_DELETE_FAIL(HttpStatus.UNAUTHORIZED, "파일 삭제에 실패하였습니다"),
-    FILE_IOEXCEPTION(HttpStatus.UNAUTHORIZED, "파일 입출력시 문제가 발생했습니다");
+    FILE_IOEXCEPTION(HttpStatus.UNAUTHORIZED, "파일 입출력시 문제가 발생했습니다"),
+
+    ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다.");
 
     private HttpStatus status;
     private String message;
