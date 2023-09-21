@@ -5,6 +5,8 @@ import com.sixbald.webide.code.dto.response.SaveCodeResponse;
 import com.sixbald.webide.common.PathUtils;
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
+import com.sixbald.webide.exception.ErrorCode;
+import com.sixbald.webide.exception.GlobalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +30,20 @@ public class CodeService {
             FileWriter writer = new FileWriter(saveFile, false);
             writer.write(content);
             writer.close();
-            log.info(fileName + "에 내용 추가 성공");
+
+            SaveCodeResponse saveCodeDto = SaveCodeResponse
+                    .builder()
+                    .path(realPath)
+                    .fileName(fileName)
+                    .fileContents(content)
+                    .build();
+
+            return Response.success("파일 저장 완료", saveCodeDto);
 
         } catch (IOException e) {
             e.printStackTrace();
-            log.error(fileName + "에 내용 추가 실패: " + e.getMessage());
+            throw new GlobalException(ErrorCode.FALI_TO_SAVE_FILE);
         }
 
-        SaveCodeResponse saveCodeDto = SaveCodeResponse
-                .builder()
-                .path(realPath)
-                .fileName(fileName)
-                .fileContents(content)
-                .build();
-
-        return Response.success("파일 저장 완료", saveCodeDto);
     }
 }

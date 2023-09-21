@@ -38,7 +38,8 @@ public enum ErrorCode {
     FOLDER_OPERATION_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "입출력 에러"),
     DUPLICATED_FOLDER(HttpStatus.BAD_REQUEST, "이미 존재하는 폴더입니다."),
     FOLDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 폴더입니다."),
-    FOLDER_NOT_EMPTY(HttpStatus.BAD_REQUEST, "폴더가 비어있지 않습니다.")
+    FOLDER_NOT_EMPTY(HttpStatus.BAD_REQUEST, "폴더가 비어있지 않습니다."),
+    FALI_TO_SAVE_FILE(HttpStatus.BAD_REQUEST,"파일 저장에 실패했습니다."),
     ;
 
     private HttpStatus status;
