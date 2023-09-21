@@ -28,8 +28,8 @@ public class CodeService {
             FileWriter writer = new FileWriter(saveFile, false);
             writer.write(content);
             writer.close();
-
             log.info(fileName + "에 내용 추가 성공");
+
         } catch (IOException e) {
             e.printStackTrace();
             log.error(fileName + "에 내용 추가 실패: " + e.getMessage());
