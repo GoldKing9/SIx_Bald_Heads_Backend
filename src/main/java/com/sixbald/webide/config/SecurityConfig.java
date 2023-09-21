@@ -59,8 +59,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(corsFilter())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/emailcheck", "/api/auth/sendmail",
-                                "/api/auth/reissue", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
+                        .requestMatchers("/api/v1/auth/signup", "/api/v1/auth/login", "/api/v1/auth/emailcheck", "/api/v1/auth/sendmail",
+                                "/api/v1/auth/reissue", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )
