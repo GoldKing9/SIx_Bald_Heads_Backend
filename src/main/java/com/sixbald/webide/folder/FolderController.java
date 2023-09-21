@@ -1,5 +1,6 @@
 package com.sixbald.webide.folder;
 
+import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.folder.dto.request.FolderRenameRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class FolderController {
     private final FolderService folderService;
 
     @PutMapping("/rename")
-    public void renameFolder(@AuthenticationPrincipal LoginUser loginUser, @RequestBody FolderRenameRequest request) {
-        folderService.renameFolder(loginUser,request);
+    public Response<Void> renameFolder(@AuthenticationPrincipal LoginUser loginUser, @RequestBody FolderRenameRequest request) {
+        return folderService.renameFolder(loginUser,request);
     }
 }

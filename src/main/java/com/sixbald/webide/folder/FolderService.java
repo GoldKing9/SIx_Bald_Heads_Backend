@@ -14,7 +14,7 @@ import java.io.File;
 @Service
 @Slf4j
 public class FolderService {
-    public void renameFolder(LoginUser loginUser,FolderRenameRequest request) {
+    public Response<Void> renameFolder(LoginUser loginUser,FolderRenameRequest request) {
         Long userId = loginUser.getUser().getId();
         String path = request.getPath();
 
@@ -25,19 +25,22 @@ public class FolderService {
         File oldFile = new File(realPath, folderName);
         File newFile = new File(realPath, folderRename);
 
-        if (oldFile.exists()) {
-            if (!newFile.exists()) {
-                if (oldFile.renameTo(newFile)) {
-                    Response.success("폴더 이름 변경 성공");
+        try {
+            if (oldFile.exists()) {
+                if (!newFile.exists()) {
+                    if (oldFile.renameTo(newFile)) {
+                        return Response.success("폴더 이름 변경 성공");
+                    } else {
+                        return Response.error("폴더 이름 변경 실패");
+                    }
                 } else {
-                    log.info("폴더 이름 변경 실패");
+                    throw new GlobalException(ErrorCode.ALREADY_USING_FOLDER_NAME);
                 }
             } else {
-                throw new GlobalException(ErrorCode.ALREADY_USING_FOLDER_NAME);
+                return Response.error("변경할 폴더가 없습니다.");
             }
-        } else {
-            log.info("변경할 폴더가 없습니다.");
+        } catch (Exception e) {
+            return Response.error("오류 발생: " + e.getMessage());
         }
-
     }
 }
