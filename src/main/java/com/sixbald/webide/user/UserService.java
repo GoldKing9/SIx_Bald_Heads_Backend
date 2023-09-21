@@ -53,7 +53,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDTO getUserInfo(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
+                () -> new GlobalException(ErrorCode.USER_NOT_FOUND)
         );
 
         return UserDTO.builder()
@@ -68,7 +68,7 @@ public class UserService {
     @Transactional
     public void updateUserProfileImage(Long userId, MultipartFile imageUrl) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
+                () -> new GlobalException(ErrorCode.USER_NOT_FOUND)
         );
         if (user.getProfileImgUrl() != null) {
             log.info("기존 이미지 경로 : {}", user.getProfileImgUrl());
@@ -85,7 +85,7 @@ public class UserService {
     @Transactional
     public Response<Void> updateNickname(Long userId, RequestNickname requestNickname) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
+                () -> new GlobalException(ErrorCode.USER_NOT_FOUND)
         );
         String updateNickname = requestNickname.getNickname();
         boolean nicknameValid = requestNickname.isNicknameValid();
@@ -112,7 +112,7 @@ public class UserService {
         Long loginUserid = loginUser.getUser().getId();
 
         User user = userRepository.findById(loginUserid)
-                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
         String updatePwd = passwordEncoder.encode(password);
         if (passwordEncoder.matches( password,user.getPassword())) {

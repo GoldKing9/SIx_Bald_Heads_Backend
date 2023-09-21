@@ -4,9 +4,13 @@ import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 
 import com.sixbald.webide.file.dto.FileMoveRequest;
+import com.sixbald.webide.file.dto.request.RenameFileRequestDTO;
+import com.sixbald.webide.file.dto.request.RequestFileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor

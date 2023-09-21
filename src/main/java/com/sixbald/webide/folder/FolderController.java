@@ -3,17 +3,14 @@ package com.sixbald.webide.folder;
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 
+import com.sixbald.webide.folder.dto.PathRequest;
 import com.sixbald.webide.folder.dto.request.FolderRenameRequest;
 
-import java.io.File;
-
-import com.sixbald.webide.folder.FolderService;
 import com.sixbald.webide.folder.dto.request.RequestFolderDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 
-import com.sixbald.webide.folder.dto.PathRequest;
 import com.sixbald.webide.folder.dto.response.Node;
 
 
@@ -31,16 +28,17 @@ public class FolderController {
 
     @PutMapping("/folder/rename")
     public Response<Void> renameFolder(@AuthenticationPrincipal LoginUser loginUser, @RequestBody FolderRenameRequest request) {
-        return folderService.renameFolder(loginUser,request);
+        return folderService.renameFolder(loginUser, request);
+    }
 
     @PutMapping("/folder/move")
     public Response<Void> moveFolder(
             @RequestBody RequestFolderDTO requestFolderDTO,
             @AuthenticationPrincipal LoginUser loginUser
-            ){
+    ) {
         folderService.moveFolderAndFile(requestFolderDTO, loginUser);
         return Response.success("폴더 이동에 성공했습니다");
-
+    }
 
     @GetMapping
     public Response<Node> getTree(@AuthenticationPrincipal LoginUser loginUser, @RequestParam(required = false, defaultValue = "/src") String path){

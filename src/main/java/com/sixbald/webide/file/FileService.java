@@ -7,6 +7,7 @@ import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
 import com.sixbald.webide.file.dto.FileMoveRequest;
+import com.sixbald.webide.file.dto.request.RenameFileRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;

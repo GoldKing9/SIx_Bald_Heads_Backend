@@ -5,6 +5,7 @@ import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
+import com.sixbald.webide.folder.dto.PathRequest;
 import com.sixbald.webide.folder.dto.request.FolderRenameRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,8 @@ import java.io.*;
 
 import com.sixbald.webide.folder.dto.request.RequestFolderDTO;
 
-import com.sixbald.webide.folder.dto.PathRequest;
 import com.sixbald.webide.folder.dto.response.Node;
 import com.sixbald.webide.folder.dto.response.Type;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
 
@@ -40,13 +39,14 @@ public class FolderService {
         try {
             FileUtils.moveDirectoryToDirectory(currentFolder, moveFolder, false); //true일 경우 : 상위 디렉토리가 없는 경우 자동 생성
 
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             log.info("FileNotFoundException");
-            throw new GlobalException(ErrorCode.NOT_FOUND_FOLDER);
-        }catch (IOException e){
+            throw new GlobalException(ErrorCode.FOLDER_NOT_FOUND);
+        } catch (IOException e) {
             log.info("IOException");
             throw new GlobalException(ErrorCode.FOLDER_MOVE_FAIL);
         }
+    }
 
 
     public void create(LoginUser loginUser, PathRequest request) {
@@ -127,7 +127,8 @@ public class FolderService {
         return name.contains(".");
 
     }
-       public Response<Void> renameFolder(LoginUser loginUser,FolderRenameRequest request) {
+
+    public Response<Void> renameFolder(LoginUser loginUser, FolderRenameRequest request) {
         Long userId = loginUser.getUser().getId();
         String path = request.getPath();
 
@@ -155,4 +156,5 @@ public class FolderService {
         } catch (Exception e) {
             return Response.error("오류 발생: " + e.getMessage());
         }
+    }
 }
