@@ -1,12 +1,11 @@
 package com.sixbald.webide.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
+
+@ToString
 @Getter
 @Entity
 @DynamicUpdate
@@ -44,4 +43,5 @@ public class User extends BaseEntity {
     public void updatePassword(String password) {
         this.password = password;
     }
+
 }

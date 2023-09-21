@@ -70,7 +70,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
-        if(!user.getProfileImgUrl().isEmpty()){
+        if (user.getProfileImgUrl() != null) {
             log.info("기존 이미지 경로 : {}", user.getProfileImgUrl());
             String result = s3Service.deleteFile(user.getProfileImgUrl()); //삭제 로직
             log.info("기존 프로필 이미지 삭제 :{}", result);
@@ -80,6 +80,7 @@ public class UserService {
         log.info("새로 업로드된 이미지 경로 : {}", imgPath);
         user.updateImage(imgPath);
         userRepository.save(user);
+
     }
     @Transactional
     public Response<Void> updateNickname(Long userId, RequestNickname requestNickname) {
@@ -87,12 +88,13 @@ public class UserService {
                 () -> new GlobalException(ErrorCode.NOT_FOUND_USER)
         );
         String updateNickname = requestNickname.getNickname();
-        if (userRepository.existsByNickname(updateNickname)) {
+        boolean nicknameValid = requestNickname.isNicknameValid();
+        if (!nicknameValid) {
             throw new GlobalException(ErrorCode.DUPLICATED_NICKNAME);
         }
-        user.updateNickname(updateNickname);
-        userRepository.save(user);
 
+        log.info("유저 : {}", user);
+        user.updateNickname(updateNickname);
         return Response.success("프로필 닉네임 수정 성공");
     }
         
