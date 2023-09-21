@@ -1,5 +1,6 @@
 package com.sixbald.webide.file;
 
+import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 import com.sixbald.webide.file.dto.FileMoveRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,8 @@ public class FileController {
     private final FileService fileService;
 
     @PutMapping("/move")
-    public void moveFile(@AuthenticationPrincipal LoginUser loginUser, @RequestBody FileMoveRequest request) {
-        fileService.moveFile(loginUser,request);
+    public Response<Void> moveFile(@AuthenticationPrincipal LoginUser loginUser, @RequestBody FileMoveRequest request) {
+        return fileService.moveFile(loginUser,request);
     }
 
 }
