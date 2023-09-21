@@ -22,8 +22,9 @@ public class FolderService {
         log.info("현재 경로 : {}", movePath);
         File currentFolder = new File(currentPath);
         File moveFolder = new File(movePath);
-        try{
+        try {
             FileUtils.moveDirectoryToDirectory(currentFolder, moveFolder, false); //true일 경우 : 상위 디렉토리가 없는 경우 자동 생성
+
         }catch (FileNotFoundException e){
             log.info("FileNotFoundException");
             throw new GlobalException(ErrorCode.NOT_FOUND_FOLDER);
