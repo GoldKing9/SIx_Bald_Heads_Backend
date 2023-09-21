@@ -16,14 +16,12 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class FileService {
-    public static final String EXTENSTION = ".java";
-
     public void moveFile(LoginUser loginUser, FileMoveRequest request) {
         Long userId = loginUser.getUser().getId();
 
         String currentPath = request.getCurrentPath();
         String movePath = request.getMovePath();
-        String fileName = request.getFileName()+EXTENSTION;
+        String fileName = request.getFileName();
 
         String realCurrentPath = PathUtils.absolutePath(userId, currentPath);
         String realMovePath = PathUtils.absolutePath(userId, movePath);
