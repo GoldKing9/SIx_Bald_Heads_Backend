@@ -27,11 +27,14 @@ public enum ErrorCode {
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다."),
 
     ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다."),
+    ALREADY_USING_FILE_NAME(HttpStatus.UNAUTHORIZED, "이미 사용중인 파일 이름 입니다."),
+    CANNOT_EXIST_FILE(HttpStatus.UNAUTHORIZED, "같은 이름의 파일은 존재할 수 없습니다.");
+
+    ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다."),
     FILE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "파일이 존재하지 않습니다"),
     FILE_DELETE_FAIL(HttpStatus.UNAUTHORIZED, "파일 삭제에 실패하였습니다"),
-    FILE_IOEXCEPTION(HttpStatus.UNAUTHORIZED, "파일 입출력시 문제가 발생했습니다"),
+    FILE_IOEXCEPTION(HttpStatus.UNAUTHORIZED, "파일 입출력시 문제가 발생했습니다");
 
-    ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다.");
 
     private HttpStatus status;
     private String message;
