@@ -27,6 +27,9 @@ public enum ErrorCode {
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다."),
     ALREADY_USING_PASSWORD(HttpStatus.UNAUTHORIZED, "이미 사용중인 비밀번호 입니다."),
 
+    ALREADY_USING_FOLDER_NAME(HttpStatus.UNAUTHORIZED, "이미 사용중인 폴더 이름 입니다."),
+    FAIL_TO_RENAME_FOLDER(HttpStatus.BAD_REQUEST, "폴더 이름 변경에 실패했습니다.");
+
     FOLDER_MOVE_FAIL(HttpStatus.UNAUTHORIZED, "폴더 이동에 실패하였습니다"),
     NOT_FOUND_FOLDER(HttpStatus.UNAUTHORIZED, "폴더가 존재하지 않습니다"),
 

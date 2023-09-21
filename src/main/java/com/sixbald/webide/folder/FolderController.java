@@ -3,6 +3,10 @@ package com.sixbald.webide.folder;
 import com.sixbald.webide.common.Response;
 import com.sixbald.webide.config.auth.LoginUser;
 
+import com.sixbald.webide.folder.dto.request.FolderRenameRequest;
+
+import java.io.File;
+
 import com.sixbald.webide.folder.FolderService;
 import com.sixbald.webide.folder.dto.request.RequestFolderDTO;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,11 @@ import org.springframework.web.bind.annotation.*;
 public class FolderController {
 
     private final FolderService folderService;
+
+
+    @PutMapping("/folder/rename")
+    public Response<Void> renameFolder(@AuthenticationPrincipal LoginUser loginUser, @RequestBody FolderRenameRequest request) {
+        return folderService.renameFolder(loginUser,request);
 
     @PutMapping("/folder/move")
     public Response<Void> moveFolder(
@@ -48,6 +57,7 @@ public class FolderController {
     public Response<Void> deleteFolder(@AuthenticationPrincipal LoginUser loginUser, String path){
         folderService.deleteFolder(loginUser, path);
         return Response.success("폴더 삭제 성공");
+
 
     }
 }
