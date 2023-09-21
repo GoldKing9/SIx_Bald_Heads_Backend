@@ -16,6 +16,7 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class FileService {
+
     public void moveFile(LoginUser loginUser, FileMoveRequest request) {
         Long userId = loginUser.getUser().getId();
 
