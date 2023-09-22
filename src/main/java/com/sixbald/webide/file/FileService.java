@@ -153,8 +153,8 @@ public class FileService {
         String realMovePath = PathUtils.absolutePath(userId, movePath);
 
         try {
-            File currnetFile = new File(realCurrentPath);
-            File moveFile = new File(realMovePath);
+            File currnetFile = FileUtils.getFile(realCurrentPath);
+            File moveFile = FileUtils.getFile(realMovePath);
             FileUtils.moveFileToDirectory(currnetFile, moveFile, false);
             return Response.success("파일 이동 성공");
 
