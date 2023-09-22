@@ -6,6 +6,5 @@ import lombok.Getter;
 public class FileMoveRequest {
     private String currentPath;
     private String movePath;
-    private String fileName;
 }
 

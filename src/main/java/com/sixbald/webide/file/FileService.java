@@ -21,7 +21,6 @@ import java.io.*;
 import org.springframework.beans.factory.annotation.Value;
 
 
-
 @Slf4j
 @Service
 public class FileService {
@@ -36,19 +35,19 @@ public class FileService {
         File file = new File(path, fileName);
         StringBuilder sb = new StringBuilder();
 
-            if(!file.exists()) {
-                log.info("파일 존재 하지 않음");
-                throw new GlobalException(ErrorCode.FILE_NOT_FOUND);
-            }
-        try{
-             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-             String str;
+        if (!file.exists()) {
+            log.info("파일 존재 하지 않음");
+            throw new GlobalException(ErrorCode.FILE_NOT_FOUND);
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            String str;
 
-             while((str = reader.readLine()) != null){
+            while ((str = reader.readLine()) != null) {
                 sb.append(str).append("\n");
-             }
+            }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new GlobalException(ErrorCode.FILE_IOEXCEPTION);
         }
         return sb.toString();
@@ -56,25 +55,24 @@ public class FileService {
 
     public void deleteFileContents(String path, LoginUser loginUser) {
         int idx = path.lastIndexOf("/");
-        String fileName = path.substring(idx+1);
-        path = PathUtils.absolutePath(loginUser.getUser().getId(), path.substring(0,idx));
+        String fileName = path.substring(idx + 1);
+        path = PathUtils.absolutePath(loginUser.getUser().getId(), path.substring(0, idx));
         log.info("fileName : {}", fileName);
         log.info("path : {}", path);
         File file = new File(path, fileName);
 
-        if(file.exists()){
-            if(file.delete()){
+        if (file.exists()) {
+            if (file.delete()) {
                 log.info("파일 삭제 성공");
-            }else{
+            } else {
                 log.info("파일 삭제 실패");
                 throw new GlobalException(ErrorCode.FILE_DELETE_FAIL);
             }
-        }else{
+        } else {
             log.info("삭제할 파일이 없습니다");
             throw new GlobalException(ErrorCode.FILE_NOT_FOUND);
         }
     }
-
 
 
     public void createFile(LoginUser loginUser, RequestFileDTO requestFileDTO) throws IOException {
@@ -144,30 +142,27 @@ public class FileService {
             throw new GlobalException(ErrorCode.NULL_POINTER_EXCEPTION);
         }
     }
-  public Response<Void> moveFile(LoginUser loginUser, FileMoveRequest request) {
+
+    public Response<Void> moveFile(LoginUser loginUser, FileMoveRequest request) {
         Long userId = loginUser.getUser().getId();
 
         String currentPath = request.getCurrentPath();
         String movePath = request.getMovePath();
-        String fileName = request.getFileName();
 
         String realCurrentPath = PathUtils.absolutePath(userId, currentPath);
         String realMovePath = PathUtils.absolutePath(userId, movePath);
 
-        File currnetFile = new File(realCurrentPath, fileName);
-        File moveFile = new File(realMovePath, fileName);
-
         try {
-            if (!moveFile.exists()) {
-                FileUtils.moveFile(currnetFile, moveFile);
-                return Response.success("파일 이동 성공");
-            } else {
-                throw new GlobalException(ErrorCode.CANNOT_EXIST_FILE);
-            }
+            File currnetFile = new File(realCurrentPath);
+            File moveFile = new File(realMovePath);
+            FileUtils.moveFileToDirectory(currnetFile, moveFile, false);
+            return Response.success("파일 이동 성공");
+
+        } catch (FileNotFoundException e) {
+            throw new GlobalException(ErrorCode.FILE_NOT_FOUND);
+
         } catch (IOException e) {
             return Response.error("파일 이동 실패");
         }
     }
-
-
 }
