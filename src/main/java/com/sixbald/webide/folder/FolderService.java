@@ -33,7 +33,7 @@ public class FolderService {
         String currentPath = PathUtils.absolutePath(loginUser.getUser().getId(), requestFolderDTO.getCurrentPath());
         log.info("현재 경로 : {}", currentPath);
         String movePath = PathUtils.absolutePath(loginUser.getUser().getId(), requestFolderDTO.getMovePath());
-        log.info("현재 경로 : {}", movePath);
+        log.info("이동 경로 : {}", movePath);
         File currentFolder = new File(currentPath);
         File moveFolder = new File(movePath);
         try {

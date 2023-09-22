@@ -37,13 +37,11 @@ public class FileController {
     }
 
     @DeleteMapping("/file")
-    @Parameter(name = "path", in = ParameterIn.QUERY)
-    @Parameter(name = "fileName", in = ParameterIn.QUERY)
     public Response<Void> deleteContents(
-            @ModelAttribute RequestFileDTO requestFileDTO,
+            String path,
             @AuthenticationPrincipal LoginUser loginUser
     ){
-        fileService.deleteFileContents(requestFileDTO, loginUser);
+        fileService.deleteFileContents(path, loginUser);
         return Response.success("해당 파일 삭제를 성공했습니다");
     }
 

@@ -54,9 +54,12 @@ public class FileService {
         return sb.toString();
     }
 
-    public void deleteFileContents(RequestFileDTO requestFileDTO, LoginUser loginUser) {
-        String fileName = requestFileDTO.getFileName();
-        String path =  PathUtils.absolutePath(loginUser.getUser().getId(), requestFileDTO.getPath());
+    public void deleteFileContents(String path, LoginUser loginUser) {
+        int idx = path.lastIndexOf("/");
+        String fileName = path.substring(idx+1);
+        path = PathUtils.absolutePath(loginUser.getUser().getId(), path.substring(0,idx));
+        log.info("fileName : {}", fileName);
+        log.info("path : {}", path);
         File file = new File(path, fileName);
 
         if(file.exists()){

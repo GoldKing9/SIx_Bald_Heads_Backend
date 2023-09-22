@@ -8,6 +8,4 @@ import lombok.NoArgsConstructor;
 public class RequestFolderDTO {
     private String currentPath;
     private String movePath;
-    private String folderName;
-
 }
