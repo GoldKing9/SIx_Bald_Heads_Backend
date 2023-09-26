@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 
 @Service
 @Slf4j
@@ -33,7 +34,7 @@ public class CodeService {
 
             SaveCodeResponse saveCodeDto = SaveCodeResponse
                     .builder()
-                    .path(realPath)
+                    .path(PathUtils.parsePath(Path.of(realPath)))
                     .fileName(fileName)
                     .fileContents(content)
                     .build();
