@@ -28,19 +28,24 @@ public class CodeService {
 
         File saveFile = new File(realPath, fileName);
         try {
-            FileWriter writer = new FileWriter(saveFile, false);
-            writer.write(content);
-            writer.close();
+            if (!saveFile.exists()) {
+                throw new GlobalException(ErrorCode.FILE_NOT_FOUND);
 
-            SaveCodeResponse saveCodeDto = SaveCodeResponse
-                    .builder()
-                    .path(PathUtils.parsePath(Path.of(realPath)))
-                    .fileName(fileName)
-                    .fileContents(content)
-                    .build();
+            } else {
+                FileWriter writer = new FileWriter(saveFile, false);
+                writer.write(content);
+                writer.close();
+
+                SaveCodeResponse saveCodeDto = SaveCodeResponse
+                        .builder()
+                        .path(PathUtils.parsePath(Path.of(realPath)))
+                        .fileName(fileName)
+                        .fileContents(content)
+                        .build();
 
 
-            return Response.success("파일 저장 완료", saveCodeDto);
+                return Response.success("파일 저장 완료", saveCodeDto);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
