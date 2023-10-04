@@ -246,6 +246,7 @@ public class UserService {
             String tempPassword = getTempPassword();
             findMember.updatePassword(passwordEncoder.encode(tempPassword));
 
+
             simpleMailMessage.setTo(email);
             simpleMailMessage.setSubject("Web_IDE 임시 비밀번호 발급" );
             simpleMailMessage.setText("임시 비밀번호는 " + tempPassword + "입니다");
