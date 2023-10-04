@@ -3,6 +3,7 @@ package com.sixbald.webide.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 
 
 @ToString
@@ -10,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +24,7 @@ public class User extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private Role role;
     private String profileImgUrl;
+    private boolean isDeleted = Boolean.FALSE;
 
     @Builder
     public User(Long id, String password, Role role, String email, String nickname, String profileImgUrl) {
