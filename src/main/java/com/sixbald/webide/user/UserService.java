@@ -245,7 +245,6 @@ public class UserService {
         if (findMember != null) {
             String tempPassword = getTempPassword();
             findMember.updatePassword(passwordEncoder.encode(tempPassword));
-            userRepository.save(findMember);
 
             simpleMailMessage.setTo(email);
             simpleMailMessage.setSubject("Web_IDE 임시 비밀번호 발급" );
