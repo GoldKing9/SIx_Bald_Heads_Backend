@@ -25,42 +25,42 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@Tag(name="유저 컨트롤러")
+@Tag(name = "유저 컨트롤러")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class UserController {
 
     private final UserService userService;
 
-    @ApiResponses(value={
+    @ApiResponses(value = {
             @ApiResponse(description = "회원가입 성공", responseCode = "200"),
             @ApiResponse(description = "회원가입 실패", responseCode = "400")
     })
     @PostMapping("/signup")
-    public Response<Void> signup(@RequestBody @Valid UserSignupRequest dto){
+    public Response<Void> signup(@RequestBody @Valid UserSignupRequest dto) {
         userService.signup(dto);
         return Response.success("회원가입 성공");
     }
 
-    @ApiResponses(value={
+    @ApiResponses(value = {
             @ApiResponse(description = "로그인 성공", responseCode = "200"),
             @ApiResponse(description = "로그인 실패", responseCode = "400")
     })
     @PostMapping("/login")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         return Response.success("로그인에 성공했습니다.", userService.login(request));
     }
 
     @PostMapping("/reissue")
-    public Response<UserLoginResponse> reissue(@RequestBody RefreshTokenRequest request){
+    public Response<UserLoginResponse> reissue(@RequestBody RefreshTokenRequest request) {
         return Response.success("토큰 발급에 성공했습니다.", userService.reissue(request.getRefreshToken()));
     }
 
-    @ApiResponses(value={
+    @ApiResponses(value = {
             @ApiResponse(description = "로그아웃 성공", responseCode = "200")
     })
     @PostMapping("/logout")
-    public Response<Void> logout(){
+    public Response<Void> logout() {
         return Response.success("로그아웃 되었습니다.");
     }
     // 프로필 조회
@@ -69,7 +69,7 @@ public class UserController {
     @Operation(summary = "프로필 조회")
     public Response<UserDTO> findUserInfo(
             @AuthenticationPrincipal LoginUser loginUser
-    ){
+    ) {
         Long userId = loginUser.getUser().getId();
         UserDTO data = userService.getUserInfo(userId);
         return Response.success("회원 조회에 성공하셨습니다", data);
@@ -92,7 +92,7 @@ public class UserController {
     public Response<Void> updateNickname(
             @RequestBody RequestNickname requestNickname,
             @AuthenticationPrincipal LoginUser loginUser
-    ){
+    ) {
         return userService.updateNickname(loginUser.getUser().getId(), requestNickname);
     }
 
@@ -100,11 +100,10 @@ public class UserController {
     public Response<Void> nicknameCheck(@RequestBody NicknameRequest request) {
         return userService.nicknameCheck(request);
     }
-    // TODO @Authentication 처리해줘야 한다.
 
     @PostMapping("/password")
-    public Response<Void> passwordEdit(@RequestBody @Valid PasswordRequest request, @AuthenticationPrincipal LoginUser loginUser)   {
-        return userService.passwordEdit(request,loginUser);
+    public Response<Void> passwordEdit(@RequestBody @Valid PasswordRequest request, @AuthenticationPrincipal LoginUser loginUser) {
+        return userService.passwordEdit(request, loginUser);
     }
 
     @PostMapping("/sendmail")
@@ -115,5 +114,10 @@ public class UserController {
     @PostMapping("/emailcheck")
     public Response<Void> emailCheck(@RequestBody EmailCheckRequest request) {
         return userService.emailCheck(request);
+    }
+
+    @PostMapping("/findpassword")
+    public Response<Void> findPassword(@RequestBody FindPasswordRequest request) {
+        return userService.findPassword(request);
     }
 }
