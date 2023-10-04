@@ -61,7 +61,7 @@ public class SecurityConfig {
                 .addFilter(corsFilter())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/signup", "/api/v1/auth/login", "/api/v1/auth/emailcheck", "/api/v1/auth/sendmail",
-                                "/api/v1/auth/reissue", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
+                                "/api/v1/auth/reissue", "/api/v1/auth/nickcheck","/api/v1/auth/findpassword","/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

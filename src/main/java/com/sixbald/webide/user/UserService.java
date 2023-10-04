@@ -40,6 +40,8 @@ public class UserService {
     @Value("${spring.mail.username}")
     private String sendEmail;
 
+    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
@@ -82,6 +84,7 @@ public class UserService {
         userRepository.save(user);
 
     }
+
     @Transactional
     public Response<Void> updateNickname(Long userId, RequestNickname requestNickname) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -115,7 +118,7 @@ public class UserService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
         String updatePwd = passwordEncoder.encode(password);
-        if (passwordEncoder.matches( password,user.getPassword())) {
+        if (passwordEncoder.matches(password, user.getPassword())) {
             throw new GlobalException(ErrorCode.ALREADY_USING_PASSWORD);
         } else {
             user.updatePassword(updatePwd);
@@ -130,7 +133,6 @@ public class UserService {
         if (userRepository.existsByEmail(email)) {
             throw new GlobalException(ErrorCode.DUPLICATED_EMAIL);
         } else {
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setTo(email);
             simpleMailMessage.setSubject("Web_IDE 인증번호 입니다.");
             simpleMailMessage.setText("이메일 인증번호는 " + authCode + "입니다");
@@ -191,7 +193,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserLoginResponse login(UserLoginRequest request){
+    public UserLoginResponse login(UserLoginRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -203,9 +205,9 @@ public class UserService {
         String refreshToken = jwtUtils.createRefreshToken();
 
         refreshTokenRepository.save(RefreshToken.builder()
-                        .id("user")
-                        .loginUser(loginUser)
-                        .refreshToken(refreshToken)
+                .id("user")
+                .loginUser(loginUser)
+                .refreshToken(refreshToken)
                 .build());
 
         return UserLoginResponse.builder()
@@ -218,7 +220,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserLoginResponse reissue(String refreshToken){
+    public UserLoginResponse reissue(String refreshToken) {
         RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() ->
                 new GlobalException(ErrorCode.EXPIRED_REFRESH_TOKEN, "RefreshToken Expired")
         );
@@ -233,6 +235,43 @@ public class UserService {
                 .accessToken(newToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public Response<Void> findPassword(FindPasswordRequest request) {
+        String email = request.getEmail();
+        User findMember = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        if (findMember != null) {
+            String tempPassword = getTempPassword();
+            findMember.updatePassword(passwordEncoder.encode(tempPassword));
+            userRepository.save(findMember);
+
+            simpleMailMessage.setTo(email);
+            simpleMailMessage.setSubject("Web_IDE 임시 비밀번호 발급" );
+            simpleMailMessage.setText("임시 비밀번호는 " + tempPassword + "입니다");
+            simpleMailMessage.setFrom(sendEmail);
+            mailSender.send(simpleMailMessage);
+
+        }
+        return Response.success("임시 비밀번호 발급 성공");
+    }
+
+    public String getTempPassword() {
+        // 영문 소문자와 숫자를 포함한 문자열 생성을 위한 문자셋
+        String charSet = "abcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder tempPassword = new StringBuilder();
+
+        Random random = new Random();
+        int passwordLength = 8 + random.nextInt(5); // 8에서 12 사이의 길이
+
+        for (int i = 0; i < passwordLength; i++) {
+            int randomIndex = random.nextInt(charSet.length());
+            char randomChar = charSet.charAt(randomIndex);
+            tempPassword.append(randomChar);
+        }
+
+        return tempPassword.toString();
     }
 }
         
