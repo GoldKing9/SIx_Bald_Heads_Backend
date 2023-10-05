@@ -1,6 +1,8 @@
 package com.sixbald.webide.exception;
 
 import com.sixbald.webide.common.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class ExceptionController {
+
+    private final SlackAlarmGenerator slackAlarmGenerator;
 
     @ExceptionHandler(value = GlobalException.class)
     public ResponseEntity<Response<Void>> handleGlobalExceptionHandler(GlobalException e) {
@@ -25,10 +30,12 @@ public class ExceptionController {
                 .body(Response.error(e.getErrorCode().getMessage()));
     }
 
-    @ExceptionHandler(value = RuntimeException.class)
-    public ResponseEntity<Response<Void>> runtimeExceptionHandler(RuntimeException e) {
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<Response<Void>> unhandledException(Exception e, HttpServletRequest request) {
         log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur : {}", e.toString());
+        slackAlarmGenerator.sendSlackAlertErrorLog(e, request);
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Response.error(e.getMessage()));
     }
