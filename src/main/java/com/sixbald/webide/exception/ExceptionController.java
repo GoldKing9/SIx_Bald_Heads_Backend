@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,17 +37,12 @@ public class ExceptionController {
     public ResponseEntity<Response<Void>> unhandledException(Exception e, HttpServletRequest request) {
         log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur : {}", e.toString());
-        slackAlarmGenerator.sendSlackAlertErrorLog(e, request);
+
+        if(!e.getClass().getSimpleName().equals(InternalAuthenticationServiceException.class.getSimpleName())) {
+            slackAlarmGenerator.sendSlackAlertErrorLog(e, request);
+        }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Response.error(e.getMessage()));
-    }
-
-    @ExceptionHandler(value = IOException.class)
-    public ResponseEntity<Response<Void>> IOExceptionHandler(IOException e) {
-        log.error("error occur: {}" , e.getStackTrace());
-        log.error("error occur : {}", e.toString());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Response.error(e.getMessage()));
     }
 
