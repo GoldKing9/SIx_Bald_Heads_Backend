@@ -101,7 +101,7 @@ public class UserController {
         return userService.nicknameCheck(request);
     }
 
-    @PostMapping("/password")
+    @PutMapping("/password")
     public Response<Void> passwordEdit(@RequestBody @Valid PasswordRequest request, @AuthenticationPrincipal LoginUser loginUser) {
         return userService.passwordEdit(request, loginUser);
     }
