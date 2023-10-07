@@ -30,8 +30,6 @@ public class PathUtils {
         } catch (IOException e) {
             throw new GlobalException(ErrorCode.FOLDER_OPERATION_FAILED, "유저 폴더 생성에 실패했습니다.");
         }
-
     }
-
 
 }

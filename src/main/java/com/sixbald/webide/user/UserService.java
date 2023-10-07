@@ -8,6 +8,7 @@ import com.sixbald.webide.domain.RefreshToken;
 import com.sixbald.webide.domain.User;
 import com.sixbald.webide.exception.ErrorCode;
 import com.sixbald.webide.exception.GlobalException;
+import com.sixbald.webide.folder.FolderService;
 import com.sixbald.webide.repository.RefreshTokenRepository;
 import com.sixbald.webide.repository.UserRepository;
 import com.sixbald.webide.user.dto.request.*;
@@ -50,6 +51,7 @@ public class UserService {
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final FolderService folderService;
 
 
     @Transactional(readOnly = true)
@@ -272,6 +274,12 @@ public class UserService {
         }
 
         return tempPassword.toString();
+    }
+
+    @Transactional
+    public void deleteUser(LoginUser loginUser) {
+        folderService.deleteFolder(loginUser,"/src");
+        userRepository.deleteById(loginUser.getUser().getId());
     }
 }
         

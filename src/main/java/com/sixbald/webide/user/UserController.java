@@ -120,4 +120,10 @@ public class UserController {
     public Response<Void> findPassword(@RequestBody FindPasswordRequest request) {
         return userService.findPassword(request);
     }
+
+    @DeleteMapping("/profile")
+    public Response<Void> deleteUser(@AuthenticationPrincipal LoginUser loginUser){
+        userService.deleteUser(loginUser);
+        return Response.success("회원 탈퇴 완료");
+    }
 }
