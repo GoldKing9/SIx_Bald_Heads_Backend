@@ -14,6 +14,7 @@ import com.sixbald.webide.repository.UserRepository;
 import com.sixbald.webide.user.dto.request.*;
 import com.sixbald.webide.user.dto.response.UserDTO;
 import com.sixbald.webide.user.dto.response.UserLoginResponse;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.sixbald.webide.config.RedisUtil;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository refreshTokenRepository;
     private final FolderService folderService;
+    private final EntityManager em;
 
 
     @Transactional(readOnly = true)
@@ -278,8 +281,19 @@ public class UserService {
 
     @Transactional
     public void deleteUser(LoginUser loginUser) {
-        folderService.deleteFolder(loginUser,"/src");
+        String uuid = UUID.randomUUID().toString();
+
+        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
+                () -> new GlobalException(ErrorCode.USER_NOT_FOUND, "존재하지 않는 유저입니다.")
+        );
+
+        user.updateNickname(uuid);
+        user.deleteEmail(uuid);
+
+        em.flush();
+
         userRepository.deleteById(loginUser.getUser().getId());
+        folderService.deleteFolder(loginUser,"/src");
     }
 }
         

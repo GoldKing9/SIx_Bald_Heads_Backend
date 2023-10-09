@@ -38,6 +38,10 @@ public class User extends BaseEntity {
         this.profileImgUrl = profileImgUrl;
     }
 
+    public void deleteEmail(String uuid){
+        this.email = uuid;
+    }
+
     public void updateImage(String imageUrl){
         this.profileImgUrl = imageUrl;
     }
